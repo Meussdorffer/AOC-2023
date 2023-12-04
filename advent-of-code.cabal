@@ -35,6 +35,8 @@ common deps
     , search-algorithms
     , mtl
     , pointedlist
+    , regex-posix
+    , regex-tdfa
   other-modules:
       Paths_advent_of_code
   ghc-options:
