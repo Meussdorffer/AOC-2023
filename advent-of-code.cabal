@@ -48,3 +48,11 @@ executable day-1
   import: deps
   main-is: day-1.hs
 
+executable day-2
+  import: deps
+  main-is: day-2.hs
+
+executable day-3
+  import: deps
+  main-is: day-3.hs
+
