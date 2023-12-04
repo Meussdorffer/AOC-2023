@@ -8,7 +8,7 @@ import Data.Char (isDigit)
 import Data.List
 
 firstAndLast :: String -> String
-firstAndLast [x] = [x] ++ [x]
+firstAndLast [x] = [x, x]
 firstAndLast xs = [head xs, last xs]
 
 solve1 :: String -> Integer
