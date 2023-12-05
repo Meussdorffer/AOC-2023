@@ -63,3 +63,7 @@ executable day-4
   import: deps
   main-is: day-4.hs
 
+executable day-5
+  import: deps
+  main-is: day-5.hs
+
