@@ -54,10 +54,10 @@ solve1 input =
         grid = expandToGrid cols $ addIdAndFlatten $ map splitLine input
         idxs = concat [[(r, c) | c <- [0..cols-1]] | r <- [0..rows-1]]
         neighborIdxs = map (gridNeighbors rows cols) idxs
-        neighbors = map (map (getGridPoint grid)) neighborIdxs
-        neighborChars = (map (map (\(_,y) -> y)) neighbors)
+        neighborPoints = map (map (getGridPoint grid)) neighborIdxs
+        neighborChars = (map (map (\(_,y) -> y)) neighborPoints)
         symbAdjacentMask = map isSymbolAdjacent neighborChars
-        symbAdjacentPoints = filter (\(_,y) -> isDigit (head y)) $ map fst $ filter (\(_,y) -> y) $ zip (concat grid) symbAdjacentMask
+        symbAdjacentPoints = filter (isDigit . head . snd) $ map fst $ filter (snd) $ zip (concat grid) symbAdjacentMask
         deduped = nubBy dedupe symbAdjacentPoints
     in sum $ map (read . snd) deduped
 
@@ -68,10 +68,10 @@ solve2 input =
         grid = expandToGrid cols $ addIdAndFlatten $ map splitLine input
         idxs = concat [[(r, c) | c <- [0..cols-1]] | r <- [0..rows-1]]
         neighborIdxs = map (gridNeighbors rows cols) idxs
-        neighbors = map (map (getGridPoint grid)) neighborIdxs
-        neighborChars = map snd $ filter ((=="*") . snd . fst) $ zip (concat grid) neighbors
-        dedupedNums = map ((map snd) . nubBy dedupe . filter (\(_,y) -> isDigit (head y))) neighborChars
-        gears = map (map read) $ filter (\x -> (length x) == 2) dedupedNums :: [[Integer]]
+        neighborPoints = map (map (getGridPoint grid)) neighborIdxs
+        neighborChars = map snd $ filter ((=="*") . snd . fst) $ zip (concat grid) neighborPoints
+        dedupedNums = map ((map snd) . nubBy dedupe . filter (isDigit . head . snd)) neighborChars
+        gears = map (map read) $ filter ((==2) . length) dedupedNums
     in sum $ map product gears
 
 main :: IO ()
