@@ -12,7 +12,6 @@ type Point = (Int, String)
 type Grid = [[Point]]
 
 splitLine :: String -> [String]
--- splitLine = split (dropInitBlank $ dropInnerBlanks $ dropFinalBlank $ oneOf ".")
 splitLine = split (dropInitBlank $ dropInnerBlanks $ dropFinalBlank $ whenElt (not . isDigit))
 
 addIdAndFlatten :: [[String]] -> [Point]
@@ -43,7 +42,6 @@ isSymbol :: String -> Bool
 isSymbol str = length str == 1 && (not $ isDigit $ head str) && str /= "."
 
 isSymbolAdjacent :: [String] -> Bool
--- isSymbolAdjacent = 0 < . length . filter (isSymbol)
 isSymbolAdjacent = (> 0) . length . filter (isSymbol)
 
 dedupe :: Point -> Point -> Bool
@@ -63,12 +61,22 @@ solve1 input =
         deduped = nubBy dedupe symbAdjacentPoints
     in sum $ map (read . snd) deduped
 
--- solve2 :: [String] -> Integer
--- solve2 = sum . map cubePower
+solve2 :: [String] -> Integer
+solve2 input =
+    let rows = length input
+        cols = length (input !! 0)
+        grid = expandToGrid cols $ addIdAndFlatten $ map splitLine input
+        idxs = concat [[(r, c) | c <- [0..cols-1]] | r <- [0..rows-1]]
+        neighborIdxs = map (gridNeighbors rows cols) idxs
+        neighbors = map (map (getGridPoint grid)) neighborIdxs
+        neighborChars = map snd $ filter ((=="*") . snd . fst) $ zip (concat grid) neighbors
+        dedupedNums = map ((map snd) . nubBy dedupe . filter (\(_,y) -> isDigit (head y))) neighborChars
+        gears = map (map read) $ filter (\x -> (length x) == 2) dedupedNums :: [[Integer]]
+    in sum $ map product gears
 
 main :: IO ()
 main = do
     [filepath] <- getArgs
     input <- readFile filepath >>= return . lines
     putStr "part 1 solution: " >> print (solve1 input)
-    -- putStr "part 2 solution: " >> print (solve2 input)
+    putStr "part 2 solution: " >> print (solve2 input)
