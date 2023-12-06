@@ -30,8 +30,7 @@ import System.Environment (getArgs)
 import Data.List.Split
 
 numWinningStrategies :: Int -> Int -> Int
-numWinningStrategies time dist = length $ filter (> dist) $ raceDistances
-    where raceDistances = [(time - presses) * presses | presses <- [1..time-1]]
+numWinningStrategies time dist = length $ filter (> dist) [(time - presses) * presses | presses <- [1..time-1]]
 
 solve1 :: String -> Int
 solve1 input =
