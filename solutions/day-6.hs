@@ -30,28 +30,22 @@ module Main where
 import System.Environment (getArgs)
 import Data.List.Split
 
--- Parses input and returns list of tuples representing (time, distance) for each race.
-parseManyRaces :: String -> [(Int, Int)]
-parseManyRaces input = zip (head parsed) (last parsed)
-    where splitFn = split (dropInitBlank $ dropInnerBlanks $ dropDelims $ oneOf " ")
-          parsed = map (map (read) . splitFn . last . splitOn ":") . lines $ input
-
--- Parses input where input is a single race.
-parseSingleRace :: String -> (Int, Int)
-parseSingleRace input = (head parsed, last parsed)
-    where parsed = map (read . concat . splitOn " " . last . splitOn ":") . lines $ input
-
 numWinningStrategies :: Int -> Int -> Int
 numWinningStrategies time dist = length $ filter (> dist) $ raceDistances
     where raceDistances = [(time - presses) * presses | presses <- [1..time-1]]
 
 solve1 :: String -> Int
-solve1 input = product $ [numWinningStrategies time dist | (time, dist) <- pairs]
-    where pairs = parseManyRaces input
+solve1 input =
+    let subListSplit = split (dropInitBlank $ dropInnerBlanks $ dropDelims $ oneOf " ")
+        parsed = map (map (read) . subListSplit . last . splitOn ":") . lines $ input
+        zipped = zip (head parsed) (last parsed)
+    in product $ [numWinningStrategies time dist | (time, dist) <- zipped]
 
 solve2 :: String -> Int
-solve2 input = numWinningStrategies time dist
-    where (time, dist) = parseSingleRace input
+solve2 input =
+    let parsed = map (read . concat . splitOn " " . last . splitOn ":") . lines $ input
+        (time, dist) = (head parsed, last parsed)
+    in numWinningStrategies time dist
 
 main :: IO ()
 main = do
