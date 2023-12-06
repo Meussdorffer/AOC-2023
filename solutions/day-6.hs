@@ -22,7 +22,6 @@ Given the above, the total distance raced over time T for any given strategy s i
 f(t, s) = (t - s) * s
 
 Applying this function over a range of strategies S = [1, T-1] returns the race distance for every possible strategy. 
-
 -}
 
 module Main where
